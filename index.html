@@ -2,8 +2,18 @@
 <html lang="nl">
 <head>
   <meta charset="UTF-8" />
-  <title>Vriendengroep – Bordspel Home</title>
+  <title>De Coolste App</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- PWA manifest -->
+  <link rel="manifest" href="manifest.json">
+
+  <!-- iOS PWA support -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="De Coolste App">
+  <link rel="apple-touch-icon" href="icon-192.png">
+
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -26,7 +36,7 @@
         </div>
         <div class="header-text">
           <h1>Hallo vrienden!</h1>
-          <p>Welkom in onze bordspel‑homepage</p>
+          <p>Welkom in De Coolste App</p>
         </div>
       </div>
 
@@ -91,5 +101,12 @@
 
   <!-- Script dat automatisch het eerstvolgende event toont -->
   <script src="next-event.js"></script>
+
+  <!-- Service worker registratie -->
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/service-worker.js");
+    }
+  </script>
 </body>
 </html>
