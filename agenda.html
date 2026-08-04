@@ -34,39 +34,80 @@
   </nav>
 
   <script>
-    const ICS_URL = "https://calendar.google.com/calendar/ical/5v0be3778upuh941d087nl2nu4%40group.calendar.google.com/private-0171dbaf4862d49d1cff2a42fce26816/basic.ics";
+    // 🔗 VUL HIER JOUW WORKER-URL IN
+    const PROXY_URL = "https://winter-rice-f921.kthnmj5r86.workers.dev";
 
     async function loadICS() {
-      const res = await fetch(ICS_URL);
-      const text = await res.text();
+      try {
+        const res = await fetch(PROXY_URL);
 
-      const events = [];
+        if (!res.ok) {
+          document.getElementById("agenda-list").innerHTML =
+            "Kon agenda niet laden (proxy-fout).";
+          return;
+        }
+
+        const text = await res.text();
+        const events = parseICS(text);
+
+        if (events.length === 0) {
+          document.getElementById("agenda-list").innerHTML =
+            "Geen activiteiten gevonden.";
+          return;
+        }
+
+        renderAgenda(events);
+
+      } catch (err) {
+        document.getElementById("agenda-list").innerHTML =
+          "Kon agenda niet laden (netwerkfout).";
+      }
+    }
+
+    function parseICS(text) {
       const lines = text.split("\n");
-
+      const events = [];
       let event = null;
 
       for (let line of lines) {
         if (line.startsWith("BEGIN:VEVENT")) event = {};
-        if (line.startsWith("SUMMARY:")) event.summary = line.replace("SUMMARY:", "").trim();
-        if (line.startsWith("DTSTART")) event.start = parseICSDate(line);
-        if (line.startsWith("DTEND")) event.end = parseICSDate(line);
-        if (line.startsWith("LOCATION:")) event.location = line.replace("LOCATION:", "").trim();
-        if (line.startsWith("END:VEVENT")) events.push(event);
+
+        if (line.startsWith("SUMMARY:"))
+          event.summary = line.replace("SUMMARY:", "").trim();
+
+        if (line.startsWith("DTSTART"))
+          event.start = parseICSDate(line);
+
+        if (line.startsWith("DTEND"))
+          event.end = parseICSDate(line);
+
+        if (line.startsWith("LOCATION:"))
+          event.location = line.replace("LOCATION:", "").trim();
+
+        if (line.startsWith("END:VEVENT"))
+          events.push(event);
       }
 
-      renderAgenda(events);
+      return events;
     }
 
     function parseICSDate(line) {
       const raw = line.split(":")[1].trim();
-      return new Date(raw.substring(0,4)+"-"+raw.substring(4,6)+"-"+raw.substring(6,8)+"T"+raw.substring(9,11)+":"+raw.substring(11,13));
+
+      const year = raw.substring(0, 4);
+      const month = raw.substring(4, 6);
+      const day = raw.substring(6, 8);
+      const hour = raw.substring(9, 11);
+      const min = raw.substring(11, 13);
+
+      return new Date(`${year}-${month}-${day}T${hour}:${min}`);
     }
 
     function renderAgenda(events) {
       const container = document.getElementById("agenda-list");
       container.innerHTML = "";
 
-      events.sort((a,b)=>a.start-b.start);
+      events.sort((a, b) => a.start - b.start);
 
       events.forEach(ev => {
         const div = document.createElement("div");
@@ -74,8 +115,17 @@
 
         div.innerHTML = `
           <div class="agenda-card-title">${ev.summary}</div>
-          <div class="agenda-line"><span class="icon">📅</span> ${ev.start.toLocaleDateString()} ${ev.start.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>
-          <div class="agenda-line"><span class="icon">📍</span> ${ev.location || "Onbekende locatie"}</div>
+
+          <div class="agenda-line">
+            <span class="icon">📅</span>
+            ${ev.start.toLocaleDateString("nl-NL")} 
+            ${ev.start.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}
+          </div>
+
+          <div class="agenda-line">
+            <span class="icon">📍</span>
+            ${ev.location || "Onbekende locatie"}
+          </div>
         `;
 
         container.appendChild(div);
