@@ -6,22 +6,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- PWA manifest -->
-  <link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="./manifest.json">
 
   <!-- iOS PWA support -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="De Coolste App">
-  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="apple-touch-icon" href="./icon-192.png">
 
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
   <div class="board-wrapper">
     <div class="board">
 
-      <!-- Tegels -->
       <div class="tiles">
         <div class="tile orange">🔥</div>
         <div class="tile green">▲</div>
@@ -29,10 +28,9 @@
         <div class="tile blue">🌀</div>
       </div>
 
-      <!-- Header -->
       <div class="header-row">
         <div class="mascot">
-          <img src="maskotte.png" alt="Maskotte">
+          <img src="./maskotte.png" alt="Maskotte">
         </div>
         <div class="header-text">
           <h1>Hallo vrienden!</h1>
@@ -40,11 +38,9 @@
         </div>
       </div>
 
-      <!-- Agenda kaart -->
       <section class="agenda-card">
         <div class="agenda-card-title">Komend agendapunt</div>
 
-        <!-- Deze worden automatisch gevuld door next-event.js -->
         <h2 id="next-title">Laden...</h2>
 
         <div class="agenda-line">
@@ -57,24 +53,23 @@
           <span id="next-location">Even geduld...</span>
         </div>
 
-        <a href="agenda.html">
+        <a href="./agenda.html">
           <button>Bekijk agenda</button>
         </a>
       </section>
 
-      <!-- Kaarten -->
       <section class="stacks">
-        <a href="games.html" class="stack-card stack-games">
+        <a href="./games.html" class="stack-card stack-games">
           <div class="stack-card-title">Games</div>
           <div class="stack-card-icon">🎲</div>
         </a>
 
-        <a href="kookboek.html" class="stack-card stack-kookboek">
+        <a href="./kookboek.html" class="stack-card stack-kookboek">
           <div class="stack-card-title">Kookboek</div>
           <div class="stack-card-icon">🍳</div>
         </a>
 
-        <a href="agenda.html" class="stack-card stack-agenda">
+        <a href="./agenda.html" class="stack-card stack-agenda">
           <div class="stack-card-title">Agenda</div>
           <div class="stack-card-icon">📆</div>
         </a>
@@ -83,13 +78,12 @@
     </div>
   </div>
 
-  <!-- Bottom nav -->
   <nav class="bottom-nav">
     <div class="nav-cap active">
       <span>🏠</span>
       <div class="nav-label">Home</div>
     </div>
-    <a href="agenda.html" class="nav-cap">
+    <a href="./agenda.html" class="nav-cap">
       <span>📅</span>
       <div class="nav-label">Agenda</div>
     </a>
@@ -99,13 +93,11 @@
     </div>
   </nav>
 
-  <!-- Script dat automatisch het eerstvolgende event toont -->
-  <script src="next-event.js"></script>
+  <script src="./next-event.js"></script>
 
-  <!-- Service worker registratie -->
   <script>
     if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/service-worker.js");
+      navigator.serviceWorker.register("./service-worker.js");
     }
   </script>
 </body>
