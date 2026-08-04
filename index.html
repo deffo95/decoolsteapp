@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <title>Vriendengroep – Bordspel Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    :root {
+      --bg: #14151a;
+      --tile-orange: #ff9f47;
+      --tile-green: #5edc78;
+      --tile-red: #ff6b81;
+      --tile-blue: #5ab3ff;
+      --card-yellow: #ffe58a;
+      --card-border: #cfa94a;
+      --text-dark: #2b2b2b;
+      --text-light: #ffffff;
+      --muted: #f5f5f5;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 80px;
+    }
+
+    .board-wrapper {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    /* Bordspel achtergrond */
+    .board {
+      background: radial-gradient(circle at top, #2a2c35 0%, #14151a 60%);
+      border-radius: 24px;
+      padding: 16px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.7);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Collage-achtige rand */
+    .board::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(90deg, rgba(255,255,255,0.05) 0, transparent 50%, rgba(255,255,255,0.05) 100%);
+      mix-blend-mode: soft-light;
+      pointer-events: none;
+    }
+
+    /* Tegel-grid */
+    .tiles {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .tile {
+      height: 60px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      color: #fff;
+      box-shadow: 0 0 8px rgba(0,0,0,0.4);
+    }
+
+    .tile.orange { background: var(--tile-orange); }
+    .tile.green { background: var(--tile-green); }
+    .tile.red { background: var(--tile-red); }
+    .tile.blue { background: var(--tile-blue); }
+
+    /* Header met maskotte */
+    .header-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .mascot {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #ffe58a, #ff9f47);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 18px rgba(255,159,71,0.7);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .mascot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .header-text h1 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #fff;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+    }
+
+    .header-text p {
+      font-size: 0.9rem;
+      color: #f0f0f0;
+    }
+
+    /* Gele agenda-kaart */
+    .agenda-card {
+      background: var(--card-yellow);
+      border-radius: 14px;
+      padding: 14px 16px;
+      border: 2px solid var(--card-border);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+      color: var(--text-dark);
+      margin-bottom: 16px;
+    }
+
+    .agenda-card-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .agenda-card h2 {
+      font-size: 1.2rem;
+      margin-bottom: 6px;
+    }
+
+    .agenda-line {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+    }
+
+    .agenda-line span.icon {
+      font-size: 1rem;
+    }
+
+    .agenda-card button {
+      margin-top: 10px;
+      background: #ff6b81;
+      color: #fff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.4);
+    }
+
+    .agenda-card button:hover {
+      background: #e94b63;
+    }
+
+    /* Stapels kaarten: Games, Kookboek, Agenda */
+    .stacks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .stack-card {
+      flex: 1 1 150px;
+      background: #fdfdfd;
+      border-radius: 10px;
+      padding: 10px 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      border-top: 6px solid;
+    }
+
+    .stack-card-title {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text-dark);
+    }
+
+    .stack-card-icon {
+      font-size: 1.6rem;
+    }
+
+    .stack-games { border-color: var(--tile-orange); }
+    .stack-kookboek { border-color: var(--tile-green); }
+    .stack-agenda { border-color: var(--tile-blue); }
+
+    /* Onderste dopjes / dobbelsteen sfeer */
+    .table-items {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+      font-size: 1.4rem;
+      opacity: 0.9;
+    }
+
+    /* Bottom nav als bierdopjes */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 70px;
+      background: #1b1c22;
+      border-top: 2px solid #2b2d35;
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      align-items: center;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.7);
+    }
+
+    .nav-cap {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fdfdfd, #cfcfd5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 10px rgba(0,0,0,0.7);
+      cursor: pointer;
+      position: relative;
+    }
+
+    .nav-cap span {
+      font-size: 1.4rem;
+    }
+
+    .nav-cap.active {
+      background: radial-gradient(circle, #ffe58a, #ff9f47);
+    }
+
+    .nav-label {
+      position: absolute;
+      bottom: -18px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.7rem;
+      color: #f5f5f5;
+    }
+
+    @media (max-width: 640px) {
+      .tiles {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+      .board-wrapper {
+        padding: 8px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="board-wrapper">
+    <div class="board">
+      <!-- Tegelrand bovenaan -->
+      <div class="tiles">
+        <div class="tile orange">🔥</div>
+        <div class="tile green">▲</div>
+        <div class="tile red">❤</div>
+        <div class="tile blue">🌀</div>
+      </div>
+
+      <!-- Header met maskotte -->
+      <div class="header-row">
+        <div class="mascot">
+          <!-- Vervang dit door jullie echte maskotte-afbeelding -->
+          <!-- <img src="maskotte.png" alt="Maskotte"> -->
+          <span>🙂</span>
+        </div>
+        <div class="header-text">
+          <h1>Hallo vrienden!</h1>
+          <p>Onze eigen bordspel‑homepage voor de vriendengroep</p>
+        </div>
+      </div>
+
+      <!-- Gele agenda-kaart -->
+      <section class="agenda-card">
+        <div class="agenda-card-title">Komend agendapunt</div>
+        <h2>Groepsuitje Havelberg</h2>
+
+        <div class="agenda-line">
+          <span class="icon">📅</span>
+          <span>Woensdag 25 aug · 14:00–18:00</span>
+        </div>
+        <div class="agenda-line">
+          <span class="icon">📍</span>
+          <span>Havelberg</span>
+        </div>
+
+        <button>Bekijk agenda</button>
+      </section>
+
+      <!-- Stapels kaarten -->
+      <section class="stacks">
+        <div class="stack-card stack-games">
+          <div class="stack-card-title">Games</div>
+          <div class="stack-card-icon">🎲</div>
+        </div>
+        <div class="stack-card stack-kookboek">
+          <div class="stack-card-title">Kookboek</div>
+          <div class="stack-card-icon">🍳</div>
+        </div>
+        <div class="stack-card stack-agenda">
+          <div class="stack-card-title">Agenda</div>
+          <div class="stack-card-icon">📆</div>
+        </div>
+      </section>
+
+      <!-- Extra tafel-items voor sfeer -->
+      <div class="table-items">
+        <span>⚙️</span>
+        <span>🧃</span>
+        <span>🎲</span>
+        <span>🍺</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom nav als bierdopjes -->
+  <nav class="bottom-nav">
+    <div class="nav-cap active">
+      <span>🏠</span>
+      <div class="nav-label">Home</div>
+    </div>
+    <div class="nav-cap">
+      <span>📅</span>
+      <div class="nav-label">Agenda</div>
+    </div>
+    <div class="nav-cap">
+      <span>☰</span>
+      <div class="nav-label">Menu</div>
+    </div>
+  </nav>
+</body>
+</html>
