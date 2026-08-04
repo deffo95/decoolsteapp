@@ -1,14 +1,9 @@
-// Jouw Cloudflare Worker URL
 const PROXY_URL = "https://winter-rice-f921.kthnmj5r86.workers.dev";
 
 async function loadNextEvent() {
   try {
     const res = await fetch(PROXY_URL);
-
-    if (!res.ok) {
-      setError("Kon agenda niet laden (proxy-fout).");
-      return;
-    }
+    if (!res.ok) return setError("Kon agenda niet laden.");
 
     const text = await res.text();
     const events = parseICS(text);
@@ -16,16 +11,13 @@ async function loadNextEvent() {
     const now = new Date();
     const upcoming = events.filter(ev => ev.start > now);
 
-    if (upcoming.length === 0) {
-      setError("Geen aankomende activiteiten.");
-      return;
-    }
+    if (upcoming.length === 0) return setError("Geen aankomende activiteiten.");
 
     const next = upcoming.sort((a, b) => a.start - b.start)[0];
     renderNextEvent(next);
 
-  } catch (err) {
-    setError("Kon agenda niet laden (netwerkfout).");
+  } catch {
+    setError("Netwerkfout.");
   }
 }
 
@@ -59,40 +51,28 @@ function parseICS(text) {
 function parseICSDate(line) {
   const raw = line.split(":")[1].trim();
 
-  // Formaat 1: 20250215T130000Z (UTC)
-  if (raw.includes("T") && raw.endsWith("Z")) {
-    return new Date(raw);
-  }
+  if (raw.endsWith("Z")) return new Date(raw);
 
-  // Formaat 2: 20250215T130000 (lokale tijd)
   if (raw.includes("T")) {
-    const year = raw.substring(0, 4);
-    const month = raw.substring(4, 6);
-    const day = raw.substring(6, 8);
-    const hour = raw.substring(9, 11);
+    const y = raw.substring(0, 4);
+    const m = raw.substring(4, 6);
+    const d = raw.substring(6, 8);
+    const h = raw.substring(9, 11);
     const min = raw.substring(11, 13);
-    return new Date(`${year}-${month}-${day}T${hour}:${min}`);
+    return new Date(`${y}-${m}-${d}T${h}:${min}`);
   }
 
-  // Formaat 3: 20250215 (hele dag)
-  if (raw.length === 8) {
-    const year = raw.substring(0, 4);
-    const month = raw.substring(4, 6);
-    const day = raw.substring(6, 8);
-    return new Date(`${year}-${month}-${day}T00:00`);
-  }
-
-  return new Date();
+  const y = raw.substring(0, 4);
+  const m = raw.substring(4, 6);
+  const d = raw.substring(6, 8);
+  return new Date(`${y}-${m}-${d}T00:00`);
 }
 
 function renderNextEvent(ev) {
   document.getElementById("next-title").textContent = ev.summary;
   document.getElementById("next-date").textContent =
-    `${ev.start.toLocaleDateString("nl-NL")} ` +
-    `${ev.start.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}`;
-
-  document.getElementById("next-location").textContent =
-    ev.location || "Onbekende locatie";
+    `${ev.start.toLocaleDateString("nl-NL")} ${ev.start.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}`;
+  document.getElementById("next-location").textContent = ev.location || "Onbekende locatie";
 }
 
 function setError(msg) {
