@@ -1,0 +1,138 @@
+/* --- BASIS --- */
+body {
+  font-family: "Segoe UI", sans-serif;
+  background: #14151a;
+  color: #fff;
+  margin: 0;
+  padding-bottom: 80px;
+}
+
+/* --- BOARD --- */
+.board-wrapper {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.board {
+  background: radial-gradient(circle at top, #2a2c35 0%, #14151a 60%);
+  border-radius: 24px;
+  padding: 16px;
+  box-shadow: 0 0 30px rgba(0,0,0,0.7);
+}
+
+/* --- TILES --- */
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.tile {
+  height: 60px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  color: #fff;
+}
+
+.tile.orange { background: #ff9f47; }
+.tile.green { background: #5edc78; }
+.tile.red { background: #ff6b81; }
+.tile.blue { background: #5ab3ff; }
+
+/* --- HEADER --- */
+.header-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.mascot {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffe58a, #ff9f47);
+  overflow: hidden;
+}
+
+.mascot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* --- AGENDA KAART --- */
+.agenda-card {
+  background: #ffe58a;
+  color: #2b2b2b;
+  border-radius: 14px;
+  padding: 14px;
+  border: 2px solid #cfa94a;
+  margin-bottom: 16px;
+}
+
+.agenda-card-title {
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.agenda-line {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+/* --- STACKS --- */
+.stacks {
+  display: flex;
+  gap: 12px;
+}
+
+.stack-card {
+  flex: 1;
+  background: #fff;
+  color: #2b2b2b;
+  border-radius: 10px;
+  padding: 12px;
+  border-top: 6px solid;
+  text-decoration: none;
+}
+
+.stack-games { border-color: #ff9f47; }
+.stack-kookboek { border-color: #5edc78; }
+.stack-agenda { border-color: #5ab3ff; }
+
+/* --- NAV --- */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background: #1b1c22;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  align-items: center;
+}
+
+.nav-cap {
+  width: 52px;
+  height: 52px;
+  background: #ddd;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #000;
+  text-decoration: none;
+}
+
+.nav-cap.active {
+  background: #ff9f47;
+}
