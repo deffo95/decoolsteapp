@@ -98,13 +98,30 @@
     function parseICSDate(line) {
       const raw = line.split(":")[1].trim();
 
-      const year = raw.substring(0, 4);
-      const month = raw.substring(4, 6);
-      const day = raw.substring(6, 8);
-      const hour = raw.substring(9, 11);
-      const min = raw.substring(11, 13);
+      // Formaat 1: 20250215T130000Z (UTC)
+      if (raw.includes("T") && raw.endsWith("Z")) {
+        return new Date(raw);
+      }
 
-      return new Date(`${year}-${month}-${day}T${hour}:${min}`);
+      // Formaat 2: 20250215T130000 (lokale tijd)
+      if (raw.includes("T")) {
+        const year = raw.substring(0, 4);
+        const month = raw.substring(4, 6);
+        const day = raw.substring(6, 8);
+        const hour = raw.substring(9, 11);
+        const min = raw.substring(11, 13);
+        return new Date(`${year}-${month}-${day}T${hour}:${min}`);
+      }
+
+      // Formaat 3: 20250215 (hele dag)
+      if (raw.length === 8) {
+        const year = raw.substring(0, 4);
+        const month = raw.substring(4, 6);
+        const day = raw.substring(6, 8);
+        return new Date(`${year}-${month}-${day}T00:00`);
+      }
+
+      return new Date();
     }
 
     function renderAgenda(events) {
