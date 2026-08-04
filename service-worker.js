@@ -1,13 +1,16 @@
-const CACHE_NAME = "vriendengroep-v1";
+const CACHE_NAME = "coolsteapp-v1";
 const ASSETS = [
-  "/",
-  "/index.html",
-  "/agenda.html",
-  "/style.css",
-  "/next-event.js",
-  "/maskotte.png",
-  "/icon-192.png",
-  "/icon-512.png"
+  "./",
+  "./index.html",
+  "./agenda.html",
+  "./kookboek.html",
+  "./style.css",
+  "./next-event.js",
+  "./manifest.json",
+  "./service-worker.js",
+  "./icon-192.png",
+  "./icon-512.png",
+  "./maskotte.png"
 ];
 
 self.addEventListener("install", event => {
@@ -20,9 +23,7 @@ self.addEventListener("activate", event => {
   event.waitUntil(
     caches.keys().then(keys =>
       Promise.all(
-        keys
-          .filter(key => key !== CACHE_NAME)
-          .map(key => caches.delete(key))
+        keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
       )
     )
   );
