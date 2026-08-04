@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <title>Agenda – Vriendengroep</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="board-wrapper">
+    <div class="board">
+
+      <h1 style="margin-bottom: 16px;">📅 Agenda</h1>
+
+      <div id="agenda-list">Agenda wordt geladen...</div>
+
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-cap">
+      <span>🏠</span>
+      <div class="nav-label">Home</div>
+    </a>
+    <div class="nav-cap active">
+      <span>📅</span>
+      <div class="nav-label">Agenda</div>
+    </div>
+    <div class="nav-cap">
+      <span>☰</span>
+      <div class="nav-label">Menu</div>
+    </div>
+  </nav>
+
+  <script>
+    const ICS_URL = "https://calendar.google.com/calendar/ical/5v0be3778upuh941d087nl2nu4%40group.calendar.google.com/private-0171dbaf4862d49d1cff2a42fce26816/basic.ics";
+
+    async function loadICS() {
+      const res = await fetch(ICS_URL);
+      const text = await res.text();
+
+      const events = [];
+      const lines = text.split("\n");
+
+      let event = null;
+
+      for (let line of lines) {
+        if (line.startsWith("BEGIN:VEVENT")) event = {};
+        if (line.startsWith("SUMMARY:")) event.summary = line.replace("SUMMARY:", "").trim();
+        if (line.startsWith("DTSTART")) event.start = parseICSDate(line);
+        if (line.startsWith("DTEND")) event.end = parseICSDate(line);
+        if (line.startsWith("LOCATION:")) event.location = line.replace("LOCATION:", "").trim();
+        if (line.startsWith("END:VEVENT")) events.push(event);
+      }
+
+      renderAgenda(events);
+    }
+
+    function parseICSDate(line) {
+      const raw = line.split(":")[1].trim();
+      return new Date(raw.substring(0,4)+"-"+raw.substring(4,6)+"-"+raw.substring(6,8)+"T"+raw.substring(9,11)+":"+raw.substring(11,13));
+    }
+
+    function renderAgenda(events) {
+      const container = document.getElementById("agenda-list");
+      container.innerHTML = "";
+
+      events.sort((a,b)=>a.start-b.start);
+
+      events.forEach(ev => {
+        const div = document.createElement("div");
+        div.className = "agenda-card";
+
+        div.innerHTML = `
+          <div class="agenda-card-title">${ev.summary}</div>
+          <div class="agenda-line"><span class="icon">📅</span> ${ev.start.toLocaleDateString()} ${ev.start.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>
+          <div class="agenda-line"><span class="icon">📍</span> ${ev.location || "Onbekende locatie"}</div>
+        `;
+
+        container.appendChild(div);
+      });
+    }
+
+    loadICS();
+  </script>
+
+</body>
+</html>
