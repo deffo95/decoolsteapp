@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8">
-  <title>Agenda – Vriendengroep</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <title>Vriendengroep – Bordspel Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -11,129 +11,82 @@
   <div class="board-wrapper">
     <div class="board">
 
-      <h1 style="margin-bottom: 16px;">📅 Agenda</h1>
+      <!-- Tegels -->
+      <div class="tiles">
+        <div class="tile orange">🔥</div>
+        <div class="tile green">▲</div>
+        <div class="tile red">❤</div>
+        <div class="tile blue">🌀</div>
+      </div>
 
-      <div id="agenda-list">Agenda wordt geladen...</div>
+      <!-- Header -->
+      <div class="header-row">
+        <div class="mascot">
+          <img src="maskotte.png" alt="Maskotte">
+        </div>
+        <div class="header-text">
+          <h1>Hallo vrienden!</h1>
+          <p>Welkom in onze bordspel‑homepage</p>
+        </div>
+      </div>
+
+      <!-- Agenda kaart -->
+      <section class="agenda-card">
+        <div class="agenda-card-title">Komend agendapunt</div>
+        <h2 id="next-title">Laden...</h2>
+
+        <div class="agenda-line">
+          <span class="icon">📅</span>
+          <span id="next-date">Even geduld...</span>
+        </div>
+
+        <div class="agenda-line">
+          <span class="icon">📍</span>
+          <span id="next-location">Even geduld...</span>
+        </div>
+
+        <a href="agenda.html">
+          <button>Bekijk agenda</button>
+        </a>
+      </section>
+
+      <!-- Kaarten -->
+      <section class="stacks">
+        <a href="games.html" class="stack-card stack-games">
+          <div class="stack-card-title">Games</div>
+          <div class="stack-card-icon">🎲</div>
+        </a>
+
+        <a href="kookboek.html" class="stack-card stack-kookboek">
+          <div class="stack-card-title">Kookboek</div>
+          <div class="stack-card-icon">🍳</div>
+        </a>
+
+        <a href="agenda.html" class="stack-card stack-agenda">
+          <div class="stack-card-title">Agenda</div>
+          <div class="stack-card-icon">📆</div>
+        </a>
+      </section>
 
     </div>
   </div>
 
+  <!-- Bottom nav -->
   <nav class="bottom-nav">
-    <a href="index.html" class="nav-cap">
+    <div class="nav-cap active">
       <span>🏠</span>
       <div class="nav-label">Home</div>
-    </a>
-    <div class="nav-cap active">
+    </div>
+    <a href="agenda.html" class="nav-cap">
       <span>📅</span>
       <div class="nav-label">Agenda</div>
-    </div>
+    </a>
     <div class="nav-cap">
       <span>☰</span>
       <div class="nav-label">Menu</div>
     </div>
   </nav>
 
-  <script>
-    // 🔗 VUL HIER JOUW WORKER-URL IN
-    const PROXY_URL = "winter-rice-f921.kthnmj5r86.workers.dev";
-
-    async function loadICS() {
-      try {
-        const res = await fetch(PROXY_URL);
-
-        if (!res.ok) {
-          document.getElementById("agenda-list").innerHTML =
-            "Kon agenda niet laden (proxy-fout).";
-          return;
-        }
-
-        const text = await res.text();
-        const events = parseICS(text);
-
-        if (events.length === 0) {
-          document.getElementById("agenda-list").innerHTML =
-            "Geen activiteiten gevonden.";
-          return;
-        }
-
-        renderAgenda(events);
-
-      } catch (err) {
-        document.getElementById("agenda-list").innerHTML =
-          "Kon agenda niet laden (netwerkfout).";
-      }
-    }
-
-    function parseICS(text) {
-      const lines = text.split("\n");
-      const events = [];
-      let event = null;
-
-      for (let line of lines) {
-        if (line.startsWith("BEGIN:VEVENT")) event = {};
-
-        if (line.startsWith("SUMMARY:"))
-          event.summary = line.replace("SUMMARY:", "").trim();
-
-        if (line.startsWith("DTSTART"))
-          event.start = parseICSDate(line);
-
-        if (line.startsWith("DTEND"))
-          event.end = parseICSDate(line);
-
-        if (line.startsWith("LOCATION:"))
-          event.location = line.replace("LOCATION:", "").trim();
-
-        if (line.startsWith("END:VEVENT"))
-          events.push(event);
-      }
-
-      return events;
-    }
-
-    function parseICSDate(line) {
-      const raw = line.split(":")[1].trim();
-
-      const year = raw.substring(0, 4);
-      const month = raw.substring(4, 6);
-      const day = raw.substring(6, 8);
-      const hour = raw.substring(9, 11);
-      const min = raw.substring(11, 13);
-
-      return new Date(`${year}-${month}-${day}T${hour}:${min}`);
-    }
-
-    function renderAgenda(events) {
-      const container = document.getElementById("agenda-list");
-      container.innerHTML = "";
-
-      events.sort((a, b) => a.start - b.start);
-
-      events.forEach(ev => {
-        const div = document.createElement("div");
-        div.className = "agenda-card";
-
-        div.innerHTML = `
-          <div class="agenda-card-title">${ev.summary}</div>
-
-          <div class="agenda-line">
-            <span class="icon">📅</span>
-            ${ev.start.toLocaleDateString("nl-NL")} 
-            ${ev.start.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}
-          </div>
-
-          <div class="agenda-line">
-            <span class="icon">📍</span>
-            ${ev.location || "Onbekende locatie"}
-          </div>
-        `;
-
-        container.appendChild(div);
-      });
-    }
-
-    loadICS();
-  </script>
-
+  <script src="next-event.js"></script>
 </body>
 </html>
