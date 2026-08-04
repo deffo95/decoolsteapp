@@ -34,7 +34,7 @@
   </nav>
 
   <script>
-    // 🔗 VUL HIER JOUW WORKER-URL IN
+    // 🔗 JOUW Cloudflare Worker URL
     const PROXY_URL = "https://winter-rice-f921.kthnmj5r86.workers.dev";
 
     async function loadICS() {
@@ -50,13 +50,17 @@
         const text = await res.text();
         const events = parseICS(text);
 
-        if (events.length === 0) {
+        // 🔥 Alleen toekomstige events
+        const now = new Date();
+        const upcoming = events.filter(ev => ev.start > now);
+
+        if (upcoming.length === 0) {
           document.getElementById("agenda-list").innerHTML =
-            "Geen activiteiten gevonden.";
+            "Geen aankomende activiteiten.";
           return;
         }
 
-        renderAgenda(events);
+        renderAgenda(upcoming);
 
       } catch (err) {
         document.getElementById("agenda-list").innerHTML =
@@ -107,6 +111,7 @@
       const container = document.getElementById("agenda-list");
       container.innerHTML = "";
 
+      // sorteren op datum
       events.sort((a, b) => a.start - b.start);
 
       events.forEach(ev => {
