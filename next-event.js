@@ -15,7 +15,6 @@ async function loadNextEvent() {
 
     const next = upcoming.sort((a, b) => a.start - b.start)[0];
     renderNextEvent(next);
-
   } catch {
     setError("Netwerkfout.");
   }
@@ -49,30 +48,47 @@ function parseICS(text) {
 }
 
 function parseICSDate(line) {
-  const raw = line.split(":")[1].trim();
+  let raw = line.split(":")[1].trim();
 
-  if (raw.endsWith("Z")) return new Date(raw);
-
-  if (raw.includes("T")) {
-    const y = raw.substring(0, 4);
-    const m = raw.substring(4, 6);
-    const d = raw.substring(6, 8);
-    const h = raw.substring(9, 11);
-    const min = raw.substring(11, 13);
-    return new Date(`${y}-${m}-${d}T${h}:${min}`);
+  if (raw.endsWith("Z")) {
+    return new Date(raw);
   }
 
-  const y = raw.substring(0, 4);
-  const m = raw.substring(4, 6);
-  const d = raw.substring(6, 8);
-  return new Date(`${y}-${m}-${d}T00:00`);
+  if (line.includes("TZID=")) {
+    const parts = raw.match(/(\d{4})(\d{2})(\d{2})T?(\d{2})?(\d{2})?/);
+    const year = parts[1];
+    const month = parts[2];
+    const day = parts[3];
+    const hour = parts[4] || "00";
+    const min = parts[5] || "00";
+    return new Date(`${year}-${month}-${day}T${hour}:${min}`);
+  }
+
+  if (raw.includes("T")) {
+    const year = raw.substring(0, 4);
+    const month = raw.substring(4, 6);
+    const day = raw.substring(6, 8);
+    const hour = raw.substring(9, 11);
+    const min = raw.substring(11, 13);
+    return new Date(`${year}-${month}-${day}T${hour}:${min}`);
+  }
+
+  if (raw.length === 8) {
+    const year = raw.substring(0, 4);
+    const month = raw.substring(4, 6);
+    const day = raw.substring(6, 8);
+    return new Date(`${year}-${month}-${day}T00:00`);
+  }
+
+  return new Date();
 }
 
 function renderNextEvent(ev) {
   document.getElementById("next-title").textContent = ev.summary;
   document.getElementById("next-date").textContent =
     `${ev.start.toLocaleDateString("nl-NL")} ${ev.start.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}`;
-  document.getElementById("next-location").textContent = ev.location || "Onbekende locatie";
+  document.getElementById("next-location").textContent =
+    ev.location || "Onbekende locatie";
 }
 
 function setError(msg) {
