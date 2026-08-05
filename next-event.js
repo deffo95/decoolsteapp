@@ -8,14 +8,19 @@ async function loadNextEvent() {
     const text = await res.text();
     const events = parseICS(text);
 
+    console.log("📦 Parsed events (home):", events);
+
     const now = new Date();
-    const upcoming = events.filter(ev => ev.start > now);
+    const upcoming = events.filter(ev => ev.start >= now);
+
+    console.log("⏭ Upcoming (home):", upcoming, "now =", now);
 
     if (upcoming.length === 0) return setError("Geen aankomende activiteiten.");
 
     const next = upcoming.sort((a, b) => a.start - b.start)[0];
     renderNextEvent(next);
-  } catch {
+  } catch (e) {
+    console.error(e);
     setError("Netwerkfout.");
   }
 }
@@ -56,11 +61,14 @@ function parseICSDate(line) {
 
   if (line.includes("TZID=")) {
     const parts = raw.match(/(\d{4})(\d{2})(\d{2})T?(\d{2})?(\d{2})?/);
+    if (!parts) return new Date();
+
     const year = parts[1];
     const month = parts[2];
     const day = parts[3];
     const hour = parts[4] || "00";
     const min = parts[5] || "00";
+
     return new Date(`${year}-${month}-${day}T${hour}:${min}`);
   }
 
@@ -70,6 +78,7 @@ function parseICSDate(line) {
     const day = raw.substring(6, 8);
     const hour = raw.substring(9, 11);
     const min = raw.substring(11, 13);
+
     return new Date(`${year}-${month}-${day}T${hour}:${min}`);
   }
 
@@ -77,6 +86,7 @@ function parseICSDate(line) {
     const year = raw.substring(0, 4);
     const month = raw.substring(4, 6);
     const day = raw.substring(6, 8);
+
     return new Date(`${year}-${month}-${day}T00:00`);
   }
 
