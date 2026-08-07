@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <title>Exploding Aces – De Coolste App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="manifest" href="./manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="De Coolste App">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+
+  <link rel="stylesheet" href="./style.css">
+
+  <style>
+    .rule-section {
+      background: #1f2026;
+      padding: 20px;
+      border-radius: 16px;
+      border: 2px solid #2a2b33;
+      margin-bottom: 16px;
+    }
+    .rule-section h2 {
+      margin-top: 0;
+      font-size: 22px;
+    }
+    details {
+      background: #2a2b33;
+      padding: 14px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+    }
+    summary {
+      font-size: 18px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="board-wrapper">
+    <div class="board">
+
+      <div class="header-row">
+        <div class="mascot">
+          <img src="./maskotte.png" alt="Maskotte">
+        </div>
+        <h1 class="app-title">De Coolste App</h1>
+      </div>
+
+      <h1 style="margin-bottom: 16px;">🃏 Exploding Aces</h1>
+
+      <div class="rule-section">
+        <h2>Spelregels</h2>
+
+        <details>
+          <summary>📦 Stapels</summary>
+          <p>Er zijn drie stapels: speelstapel (dicht), afvalstapel (open), begraafplaats (open). Je mag de open stapels altijd bekijken.</p>
+        </details>
+
+        <details>
+          <summary>🎮 Beurtverloop</summary>
+          <p>Je begint met spelen van kaarten (mag ook niets). Je beurt eindigt met een kaart pakken, tenzij een kaart anders zegt.</p>
+          <p>Speel je een kaart op afval/begraafplaats? Dan gaat het effect altijd af.</p>
+          <p>Ontmantel, Nope en Kloon werken alleen in de juiste situatie.</p>
+        </details>
+
+        <details>
+          <summary>🖐 Handlimiet</summary>
+          <p>Maximaal 5 kaarten in hand. Pak je een kaart terwijl je al 5 hebt? Dan leg je je hele hand weg zonder effecten.</p>
+        </details>
+
+        <details>
+          <summary>💣 Bom</summary>
+          <p>Pak je een bom? Dan lig je eruit. Bom gaat terug in de stapel. Je hand gaat weg zonder effecten.</p>
+          <p>Begin je een beurt met 0 kaarten? Dan krijg je één bom‑bescherming.</p>
+        </details>
+
+        <details>
+          <summary>🔄 Schudden</summary>
+          <p>De speler die aan de beurt is schudt. Afvalstapel wordt geschud als je daaruit moet pakken.</p>
+        </details>
+
+        <details>
+          <summary>⚡ Super effecten</summary>
+          <p>Speel 2 dezelfde kaarten tegelijk → super effect.</p>
+          <p>Voor “Dief” zijn 3 dezelfde kaarten nodig.</p>
+        </details>
+
+        <details>
+          <summary>🔥 Aanval‑kaart</summary>
+          <p>Een aanval geeft extra beurten aan de volgende speler.</p>
+          <p>Die speler mag de aanval doorgeven door zelf een aanval te spelen.</p>
+          <p>Stop je met doorgeven? Dan moet je alle extra beurten spelen.</p>
+        </details>
+
+        <details>
+          <summary>🧨 Bom tijdens aanval</summary>
+          <p>Pak je een bom terwijl je nog beurten moet? Bom + ontmantel apart leggen, eerst beurten afmaken.</p>
+        </details>
+
+        <details>
+          <summary>📊 Speelstapel samenstelling</summary>
+          <p>8 Aanval<br>
+             8 Dief<br>
+             7 Ontmantel<br>
+             4 Bom<br>
+             4 Nope<br>
+             4 Voorspel<br>
+             4 Mixer<br>
+             4 Spion<br>
+             4 Recycle<br>
+             4 Kloon<br>
+             2 Het Lot<br>
+             2 Kapitalist<br>
+             1/2 Donatie<br>
+             1/2 Communist<br>
+             1 Detective<br>
+             1 Mirakel<br>
+             1 E.O.D.<br>
+             1 Terrorist<br>
+             1 O'Mega<br>
+             1 Nuke<br>
+             Totaal: 63–65 kaarten</p>
+        </details>
+
+      </div>
+
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="./index.html" class="nav-cap">🏠</a>
+    <a href="./agenda.html" class="nav-cap">📅</a>
+    <div class="nav-cap" id="nav-menu">☰</div>
+  </nav>
+
+  <div id="menu-overlay" class="menu-overlay">
+    <div class="menu-box slide-in">
+      <h3>Menu</h3>
+      <a href="./index.html">🏠 Home</a>
+      <a href="./games.html">🎮 Games</a>
+      <a href="./agenda.html">📅 Agenda</a>
+      <button id="menu-close">Sluiten</button>
+    </div>
+  </div>
+
+  <script>
+    const menuBtn = document.getElementById("nav-menu");
+    const menuOverlay = document.getElementById("menu-overlay");
+    const menuClose = document.getElementById("menu-close");
+    const menuBox = document.querySelector(".menu-box");
+
+    menuBtn.addEventListener("click", () => {
+      menuOverlay.style.display = "flex";
+      menuBox.classList.add("slide-in");
+    });
+
+    menuClose.addEventListener("click", () => {
+      menuBox.classList.remove("slide-in");
+      setTimeout(() => menuOverlay.style.display = "none", 200);
+    });
+
+    menuOverlay.addEventListener("click", (e) => {
+      if (e.target === menuOverlay) {
+        menuBox.classList.remove("slide-in");
+        setTimeout(() => menuOverlay.style.display = "none", 200);
+      }
+    });
+  </script>
+
+</body>
+</html>
