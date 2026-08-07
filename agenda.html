@@ -7,7 +7,6 @@
 
   <link rel="manifest" href="./manifest.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="De Coolste App">
   <link rel="apple-touch-icon" href="./icon-192.png">
 
@@ -38,149 +37,63 @@
   </nav>
 
   <script>
-  const PROXY_URL = "https://winter-rice-f921.kthnmj5r86.workers.dev";
+    const PROXY_URL = "https://winter-rice-f921.kthnmj5r86.workers.dev";
 
-  async function loadICS() {
-    try {
-      const res = await fetch(PROXY_URL);
-      if (!res.ok) {
+    const birthdays = [
+      { name: "Bart", month: 3, day: 13 },
+      { name: "Davey", month: 1, day: 8 },
+      { name: "Jessy", month: 7, day: 4 },
+      { name: "Geus", month: 3, day: 12 },
+      { name: "Kevin", month: 6, day: 13 },
+      { name: "Koen", month: 1, day: 10 },
+      { name: "Martin", month: 10, day: 3 },
+      { name: "Robbie", month: 7, day: 8 },
+      { name: "Coolste jongens", month: 7, day: 6 }
+    ];
+
+    async function loadICS() {
+      try {
+        const res = await fetch(PROXY_URL);
+        const text = await res.text();
+        const events = parseICS(text);
+
+        const now = new Date();
+        const upcoming = events.filter(ev => ev.start >= now);
+
+        // verjaardagen met jaar-correctie
+        const birthdayEvents = birthdays.map(b => {
+          let year = now.getFullYear();
+          let date = new Date(year, b.month - 1, b.day, 0, 0);
+
+          if (date < now) {
+            year++;
+            date = new Date(year, b.month - 1, b.day, 0, 0);
+          }
+
+          return {
+            summary: `Verjaardag van ${b.name}`,
+            start: date,
+            location: "🎉"
+          };
+        });
+
+        const allEvents = [...upcoming, ...birthdayEvents];
+
+        renderAgenda(allEvents.sort((a, b) => a.start - b.start));
+      } catch {
         document.getElementById("agenda-list").innerHTML =
-          "Kon agenda niet laden (proxy-fout).";
-        return;
+          "Kon agenda niet laden.";
       }
-
-      const text = await res.text();
-      const events = parseICS(text);
-
-      console.log("📦 Parsed events:", events);
-
-      const now = new Date();
-      // Gebruik >= en toon ook vandaag
-      const upcoming = events.filter(ev => ev.start >= now);
-
-      console.log("⏭ Upcoming events:", upcoming, "now =", now);
-
-      if (upcoming.length === 0) {
-        document.getElementById("agenda-list").innerHTML =
-          "Geen aankomende activiteiten.";
-        return;
-      }
-
-      renderAgenda(upcoming);
-    } catch (err) {
-      console.error(err);
-      document.getElementById("agenda-list").innerHTML =
-        "Kon agenda niet laden (netwerkfout).";
-    }
-  }
-
-  function parseICS(text) {
-    const lines = text.split("\n");
-    const events = [];
-    let event = null;
-
-    for (let line of lines) {
-      if (line.startsWith("BEGIN:VEVENT")) event = {};
-
-      if (line.startsWith("SUMMARY:"))
-        event.summary = line.replace("SUMMARY:", "").trim();
-
-      if (line.startsWith("DTSTART"))
-        event.start = parseICSDate(line);
-
-      if (line.startsWith("DTEND"))
-        event.end = parseICSDate(line);
-
-      if (line.startsWith("LOCATION:"))
-        event.location = line.replace("LOCATION:", "").trim();
-
-      if (line.startsWith("END:VEVENT"))
-        events.push(event);
     }
 
-    return events;
-  }
+    function parseICS(text) {
+      const lines = text.split("\n");
+      const events = [];
+      let event = null;
 
-  function parseICSDate(line) {
-    let raw = line.split(":")[1].trim();
+      for (let line of lines) {
+        if (line.startsWith("BEGIN:VEVENT")) event = {};
 
-    // UTC
-    if (raw.endsWith("Z")) {
-      return new Date(raw);
-    }
+        if (line.startsWith("SUMMARY:"))
+          event.summary = line.replace("SUMMARY:", "").trim();
 
-    // TZID=Europe/Amsterdam etc.
-    if (line.includes("TZID=")) {
-      const parts = raw.match(/(\d{4})(\d{2})(\d{2})T?(\d{2})?(\d{2})?/);
-      if (!parts) return new Date();
-
-      const year = parts[1];
-      const month = parts[2];
-      const day = parts[3];
-      const hour = parts[4] || "00";
-      const min = parts[5] || "00";
-
-      return new Date(`${year}-${month}-${day}T${hour}:${min}`);
-    }
-
-    // Lokale tijd met T
-    if (raw.includes("T")) {
-      const year = raw.substring(0, 4);
-      const month = raw.substring(4, 6);
-      const day = raw.substring(6, 8);
-      const hour = raw.substring(9, 11);
-      const min = raw.substring(11, 13);
-
-      return new Date(`${year}-${month}-${day}T${hour}:${min}`);
-    }
-
-    // Hele dag
-    if (raw.length === 8) {
-      const year = raw.substring(0, 4);
-      const month = raw.substring(4, 6);
-      const day = raw.substring(6, 8);
-
-      return new Date(`${year}-${month}-${day}T00:00`);
-    }
-
-    return new Date();
-  }
-
-  function renderAgenda(events) {
-    const container = document.getElementById("agenda-list");
-    container.innerHTML = "";
-
-    events.sort((a, b) => a.start - b.start);
-
-    events.forEach(ev => {
-      const div = document.createElement("div");
-      div.className = "agenda-card";
-
-      div.innerHTML = `
-        <div class="agenda-card-title">${ev.summary}</div>
-        <div class="agenda-line">
-          <span class="icon">📅</span>
-          ${ev.start.toLocaleDateString("nl-NL")}
-          ${ev.start.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}
-        </div>
-        <div class="agenda-line">
-          <span class="icon">📍</span>
-          ${ev.location || "Onbekende locatie"}
-        </div>
-      `;
-
-      container.appendChild(div);
-    });
-  }
-
-  loadICS();
-</script>
-
-
-  <script>
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("./service-worker.js");
-    }
-  </script>
-</body>
-</html>
