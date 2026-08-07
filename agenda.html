@@ -60,11 +60,19 @@
         const now = new Date();
         const upcoming = events.filter(ev => ev.start >= now);
 
+        // verjaardagen met jaar-correctie
         const birthdayEvents = birthdays.map(b => {
-          const year = now.getFullYear();
+          let year = now.getFullYear();
+          let date = new Date(year, b.month - 1, b.day, 0, 0);
+
+          if (date < now) {
+            year++;
+            date = new Date(year, b.month - 1, b.day, 0, 0);
+          }
+
           return {
             summary: `Verjaardag van ${b.name}`,
-            start: new Date(year, b.month - 1, b.day, 0, 0),
+            start: date,
             location: "🎉"
           };
         });
