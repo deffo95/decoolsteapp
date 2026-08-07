@@ -1,140 +1,121 @@
-/* --- BASIS --- */
+/* Algemene layout */
 body {
-  font-family: "Segoe UI", sans-serif;
-  background: #14151a;
-  color: #fff;
   margin: 0;
-  padding-bottom: 80px;
+  font-family: Arial, sans-serif;
+  background: #14151a;
+  color: white;
 }
 
-/* --- BOARD --- */
+/* Bordspel wrapper */
 .board-wrapper {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 16px;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
 }
 
 .board {
-  background: radial-gradient(circle at top, #2a2c35 0%, #14151a 60%);
-  border-radius: 24px;
-  padding: 16px;
-  box-shadow: 0 0 30px rgba(0,0,0,0.7);
+  width: 100%;
+  max-width: 480px;
 }
 
-/* --- TILES --- */
-.tiles {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
-  margin-bottom: 16px;
-}
-
-.tile {
-  height: 60px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.4rem;
-  color: #fff;
-}
-
-.tile.orange { background: #ff9f47; }
-.tile.green { background: #5edc78; }
-.tile.red { background: #ff6b81; }
-.tile.blue { background: #5ab3ff; }
-
-/* --- HEADER --- */
+/* Header met logo + titel */
 .header-row {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.mascot {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #ffe58a, #ff9f47);
-  overflow: hidden;
+  margin-bottom: 20px;
 }
 
 .mascot img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: 80px;
+  height: auto;
 }
 
-/* --- AGENDA KAART --- */
+.app-title {
+  font-size: 26px;
+  margin-left: 12px;
+  font-weight: bold;
+}
+
+/* Agenda kaart */
 .agenda-card {
-  background: #ffe58a;
-  color: #2b2b2b;
-  border-radius: 14px;
-  padding: 14px;
-  border: 2px solid #cfa94a;
-  margin-bottom: 16px;
+  background: #1f2026;
+  padding: 20px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  border: 2px solid #2a2b33;
 }
 
 .agenda-card-title {
-  font-weight: 700;
-  margin-bottom: 8px;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 12px;
 }
 
 .agenda-line {
   display: flex;
-  gap: 6px;
-  margin-bottom: 4px;
+  align-items: center;
+  margin: 6px 0;
 }
 
-/* --- STACKS --- */
+.agenda-line .icon {
+  margin-right: 8px;
+}
+
+button {
+  margin-top: 16px;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: #3a3b45;
+  color: white;
+  font-size: 16px;
+}
+
+/* Stacks (Games / Agenda) */
 .stacks {
   display: flex;
-  gap: 12px;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .stack-card {
-  flex: 1;
-  background: #fff;
-  color: #2b2b2b;
-  border-radius: 10px;
-  padding: 12px;
-  border-top: 6px solid;
+  background: #1f2026;
+  padding: 20px;
+  border-radius: 16px;
+  border: 2px solid #2a2b33;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   text-decoration: none;
+  color: white;
 }
 
-.stack-games { border-color: #ff9f47; }
-.stack-kookboek { border-color: #5edc78; }
-.stack-agenda { border-color: #5ab3ff; }
+.stack-card-title {
+  font-size: 20px;
+}
 
-/* --- NAV --- */
+.stack-card-icon {
+  font-size: 28px;
+}
+
+/* Onderste navigatie */
 .bottom-nav {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 70px;
-  background: #1b1c22;
+  background: #1f2026;
+  border-top: 2px solid #2a2b33;
   display: flex;
-  justify-content: center;
-  gap: 40px;
-  align-items: center;
+  justify-content: space-around;
+  padding: 12px 0;
 }
 
 .nav-cap {
-  width: 52px;
-  height: 52px;
-  background: #ddd;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #000;
+  font-size: 26px;
+  color: white;
   text-decoration: none;
-}
-
-.nav-cap.active {
-  background: #ff9f47;
 }
 
 /* Menu overlay */
@@ -151,6 +132,7 @@ body {
   z-index: 999;
 }
 
+/* Slide-in menu box */
 .menu-box {
   background: #ffffff;
   width: 100%;
@@ -159,13 +141,18 @@ body {
   border-top-right-radius: 20px;
   box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
   text-align: center;
+
+  /* Startpositie: onder beeld */
+  transform: translateY(100%);
+  transition: transform 0.25s ease-out;
 }
 
-.menu-box h3 {
-  margin-top: 0;
-  margin-bottom: 16px;
+/* Actieve animatie */
+.menu-box.slide-in {
+  transform: translateY(0);
 }
 
+/* Menu links */
 .menu-box a {
   display: block;
   padding: 12px;
@@ -174,6 +161,7 @@ body {
   color: #333;
 }
 
+/* Sluitknop */
 #menu-close {
   margin-top: 20px;
   padding: 10px 20px;
@@ -183,5 +171,3 @@ body {
   color: white;
   border-radius: 8px;
 }
-
-
