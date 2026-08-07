@@ -1,27 +1,43 @@
 const PROXY_URL = "https://winter-rice-f921.kthnmj5r86.workers.dev";
 
+const birthdays = [
+  { name: "Bart", month: 3, day: 13 },
+  { name: "Davey", month: 1, day: 8 },
+  { name: "Jessy", month: 7, day: 4 },
+  { name: "Geus", month: 3, day: 12 },
+  { name: "Kevin", month: 6, day: 13 },
+  { name: "Koen", month: 1, day: 10 },
+  { name: "Martin", month: 10, day: 3 },
+  { name: "Robbie", month: 7, day: 8 },
+  { name: "Coolste jongens", month: 7, day: 6 }
+];
+
 async function loadNextEvent() {
   try {
     const res = await fetch(PROXY_URL);
-    if (!res.ok) return setError("Kon agenda niet laden.");
-
     const text = await res.text();
     const events = parseICS(text);
-
-    console.log("📦 Parsed events (home):", events);
 
     const now = new Date();
     const upcoming = events.filter(ev => ev.start >= now);
 
-    console.log("⏭ Upcoming (home):", upcoming, "now =", now);
+    const birthdayEvents = birthdays.map(b => {
+      const year = now.getFullYear();
+      return {
+        summary: `Verjaardag van ${b.name}`,
+        start: new Date(year, b.month - 1, b.day, 0, 0),
+        location: "🎉"
+      };
+    });
 
-    if (upcoming.length === 0) return setError("Geen aankomende activiteiten.");
+    const allEvents = [...upcoming, ...birthdayEvents];
 
-    const next = upcoming.sort((a, b) => a.start - b.start)[0];
+    const next = allEvents.sort((a, b) => a.start - b.start)[0];
+
     renderNextEvent(next);
-  } catch (e) {
-    console.error(e);
-    setError("Netwerkfout.");
+
+  } catch {
+    setError("Kon agenda niet laden.");
   }
 }
 
@@ -39,9 +55,6 @@ function parseICS(text) {
     if (line.startsWith("DTSTART"))
       event.start = parseICSDate(line);
 
-    if (line.startsWith("DTEND"))
-      event.end = parseICSDate(line);
-
     if (line.startsWith("LOCATION:"))
       event.location = line.replace("LOCATION:", "").trim();
 
@@ -55,39 +68,27 @@ function parseICS(text) {
 function parseICSDate(line) {
   let raw = line.split(":")[1].trim();
 
-  if (raw.endsWith("Z")) {
-    return new Date(raw);
-  }
+  if (raw.endsWith("Z")) return new Date(raw);
 
   if (line.includes("TZID=")) {
-    const parts = raw.match(/(\d{4})(\d{2})(\d{2})T?(\d{2})?(\d{2})?/);
-    if (!parts) return new Date();
-
-    const year = parts[1];
-    const month = parts[2];
-    const day = parts[3];
-    const hour = parts[4] || "00";
-    const min = parts[5] || "00";
-
-    return new Date(`${year}-${month}-${day}T${hour}:${min}`);
+    const p = raw.match(/(\d{4})(\d{2})(\d{2})T?(\d{2})?(\d{2})?/);
+    return new Date(`${p[1]}-${p[2]}-${p[3]}T${p[4] || "00"}:${p[5] || "00"}`);
   }
 
   if (raw.includes("T")) {
-    const year = raw.substring(0, 4);
-    const month = raw.substring(4, 6);
-    const day = raw.substring(6, 8);
-    const hour = raw.substring(9, 11);
+    const y = raw.substring(0, 4);
+    const m = raw.substring(4, 6);
+    const d = raw.substring(6, 8);
+    const h = raw.substring(9, 11);
     const min = raw.substring(11, 13);
-
-    return new Date(`${year}-${month}-${day}T${hour}:${min}`);
+    return new Date(`${y}-${m}-${d}T${h}:${min}`);
   }
 
   if (raw.length === 8) {
-    const year = raw.substring(0, 4);
-    const month = raw.substring(4, 6);
-    const day = raw.substring(6, 8);
-
-    return new Date(`${year}-${month}-${day}T00:00`);
+    const y = raw.substring(0, 4);
+    const m = raw.substring(4, 6);
+    const d = raw.substring(6, 8);
+    return new Date(`${y}-${m}-${d}T00:00`);
   }
 
   return new Date();
@@ -96,7 +97,7 @@ function parseICSDate(line) {
 function renderNextEvent(ev) {
   document.getElementById("next-title").textContent = ev.summary;
   document.getElementById("next-date").textContent =
-    `${ev.start.toLocaleDateString("nl-NL")} ${ev.start.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}`;
+    `${ev.start.toLocaleDateString("nl-NL")}`;
   document.getElementById("next-location").textContent =
     ev.location || "Onbekende locatie";
 }
