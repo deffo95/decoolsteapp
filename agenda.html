@@ -2,7 +2,7 @@
 <html lang="nl">
 <head>
   <meta charset="UTF-8">
-  <title>Agenda– De Coolste App</title>
+  <title>Agenda – De Coolste App</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <link rel="manifest" href="./manifest.json">
@@ -16,154 +16,60 @@
 <body>
   <div class="board-wrapper">
     <div class="board">
+
+      <div class="header-row">
+        <div class="mascot">
+          <img src="./maskotte.png" alt="Maskotte">
+        </div>
+        <h1 class="app-title">De Coolste App</h1>
+      </div>
+
       <h1 style="margin-bottom: 16px;">📅 Agenda</h1>
       <div id="agenda-list">Agenda wordt geladen...</div>
+
     </div>
   </div>
 
   <nav class="bottom-nav">
-    <a href="./index.html" class="nav-cap">
-      <span>🏠</span>
-      <div class="nav-label">Home</div>
-    </a>
-    <div class="nav-cap active">
-      <span>📅</span>
-      <div class="nav-label">Agenda</div>
-    </div>
-    <div class="nav-cap">
-      <span>☰</span>
-      <div class="nav-label">Menu</div>
-    </div>
+    <a href="./index.html" class="nav-cap">🏠</a>
+    <a href="./agenda.html" class="nav-cap">📅</a>
+    <div class="nav-cap" id="nav-menu">☰</div>
   </nav>
 
+  <div id="menu-overlay" class="menu-overlay">
+    <div class="menu-box slide-in">
+      <h3>Menu</h3>
+      <a href="./index.html">🏠 Home</a>
+      <a href="./games.html">🎲 Games</a>
+      <a href="./agenda.html">📅 Agenda</a>
+      <button id="menu-close">Sluiten</button>
+    </div>
+  </div>
+
+  <script src="./agenda-script.js"></script>
+
   <script>
-    const PROXY_URL = "https://winter-rice-f921.kthnmj5r86.workers.dev";
+    const menuBtn = document.getElementById("nav-menu");
+    const menuOverlay = document.getElementById("menu-overlay");
+    const menuClose = document.getElementById("menu-close");
+    const menuBox = document.querySelector(".menu-box");
 
-    const birthdays = [
-      { name: "Bart", month: 3, day: 13 },
-      { name: "Davey", month: 1, day: 8 },
-      { name: "Jessy", month: 7, day: 4 },
-      { name: "Geus", month: 3, day: 12 },
-      { name: "Kevin", month: 6, day: 13 },
-      { name: "Koen", month: 1, day: 10 },
-      { name: "Martin", month: 10, day: 3 },
-      { name: "Robbie", month: 7, day: 8 },
-      { name: "Coolste jongens", month: 7, day: 6 }
-    ];
+    menuBtn.addEventListener("click", () => {
+      menuOverlay.style.display = "flex";
+      menuBox.classList.add("slide-in");
+    });
 
-    async function loadICS() {
-      try {
-        const res = await fetch(PROXY_URL);
-        const text = await res.text();
-        const events = parseICS(text);
+    menuClose.addEventListener("click", () => {
+      menuBox.classList.remove("slide-in");
+      setTimeout(() => menuOverlay.style.display = "none", 200);
+    });
 
-        const now = new Date();
-        const upcoming = events.filter(ev => ev.start >= now);
-
-        // verjaardagen met jaar-correctie
-        const birthdayEvents = birthdays.map(b => {
-          let year = now.getFullYear();
-          let date = new Date(year, b.month - 1, b.day, 0, 0);
-
-          if (date < now) {
-            year++;
-            date = new Date(year, b.month - 1, b.day, 0, 0);
-          }
-
-          return {
-            summary: `Verjaardag van ${b.name}`,
-            start: date,
-            location: "🎉"
-          };
-        });
-
-        const allEvents = [...upcoming, ...birthdayEvents];
-
-        renderAgenda(allEvents.sort((a, b) => a.start - b.start));
-      } catch {
-        document.getElementById("agenda-list").innerHTML =
-          "Kon agenda niet laden.";
+    menuOverlay.addEventListener("click", (e) => {
+      if (e.target === menuOverlay) {
+        menuBox.classList.remove("slide-in");
+        setTimeout(() => menuOverlay.style.display = "none", 200);
       }
-    }
-
-    function parseICS(text) {
-      const lines = text.split("\n");
-      const events = [];
-      let event = null;
-
-      for (let line of lines) {
-        if (line.startsWith("BEGIN:VEVENT")) event = {};
-
-        if (line.startsWith("SUMMARY:"))
-          event.summary = line.replace("SUMMARY:", "").trim();
-
-        if (line.startsWith("DTSTART"))
-          event.start = parseICSDate(line);
-
-        if (line.startsWith("LOCATION:"))
-          event.location = line.replace("LOCATION:", "").trim();
-
-        if (line.startsWith("END:VEVENT"))
-          events.push(event);
-      }
-
-      return events;
-    }
-
-    function parseICSDate(line) {
-      let raw = line.split(":")[1].trim();
-
-      if (raw.endsWith("Z")) return new Date(raw);
-
-      if (line.includes("TZID=")) {
-        const p = raw.match(/(\d{4})(\d{2})(\d{2})T?(\d{2})?(\d{2})?/);
-        return new Date(`${p[1]}-${p[2]}-${p[3]}T${p[4] || "00"}:${p[5] || "00"}`);
-      }
-
-      if (raw.includes("T")) {
-        const y = raw.substring(0, 4);
-        const m = raw.substring(4, 6);
-        const d = raw.substring(6, 8);
-        const h = raw.substring(9, 11);
-        const min = raw.substring(11, 13);
-        return new Date(`${y}-${m}-${d}T${h}:${min}`);
-      }
-
-      if (raw.length === 8) {
-        const y = raw.substring(0, 4);
-        const m = raw.substring(4, 6);
-        const d = raw.substring(6, 8);
-        return new Date(`${y}-${m}-${d}T00:00`);
-      }
-
-      return new Date();
-    }
-
-    function renderAgenda(events) {
-      const container = document.getElementById("agenda-list");
-      container.innerHTML = "";
-
-      events.forEach(ev => {
-        const div = document.createElement("div");
-        div.className = "agenda-card";
-
-        div.innerHTML = `
-          <div class="agenda-card-title">${ev.summary}</div>
-          <div class="agenda-line">
-            <span class="icon">📅</span>
-            ${ev.start.toLocaleDateString("nl-NL")}
-          </div>
-          <div class="agenda-line">
-            <span class="icon">📍</span>
-            ${ev.location || "Onbekende locatie"}
-          </div>
-        `;
-
-        container.appendChild(div);
-      });
-    }
-
-    loadICS();
+    });
   </script>
 
   <script>
