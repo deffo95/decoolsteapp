@@ -17,12 +17,15 @@
   <div class="board-wrapper">
     <div class="board">
 
+      <!-- Header met logo + titel -->
       <div class="header-row">
         <div class="mascot">
           <img src="./maskotte.png" alt="Maskotte">
         </div>
+        <h1 class="app-title">De Coolste App</h1>
       </div>
 
+      <!-- Agenda kaart -->
       <section class="agenda-card">
         <div class="agenda-card-title">Komende activiteit</div>
 
@@ -43,6 +46,7 @@
         </a>
       </section>
 
+      <!-- Kaarten -->
       <section class="stacks">
         <a href="./games.html" class="stack-card stack-games">
           <div class="stack-card-title">Games</div>
@@ -58,14 +62,16 @@
     </div>
   </div>
 
+  <!-- Onderste navigatie -->
   <nav class="bottom-nav">
-    <a href="./index.html" class="nav-cap" id="nav-home">🏠</a>
-    <a href="./agenda.html" class="nav-cap" id="nav-agenda">📅</a>
+    <a href="./index.html" class="nav-cap">🏠</a>
+    <a href="./agenda.html" class="nav-cap">📅</a>
     <div class="nav-cap" id="nav-menu">☰</div>
   </nav>
 
+  <!-- Slide-in menu -->
   <div id="menu-overlay" class="menu-overlay">
-    <div class="menu-box">
+    <div class="menu-box slide-in">
       <h3>Menu</h3>
       <a href="./index.html">🏠 Home</a>
       <a href="./games.html">🎲 Games</a>
@@ -76,22 +82,27 @@
 
   <script src="./next-event.js"></script>
 
+  <!-- Menu script -->
   <script>
     const menuBtn = document.getElementById("nav-menu");
     const menuOverlay = document.getElementById("menu-overlay");
     const menuClose = document.getElementById("menu-close");
+    const menuBox = document.querySelector(".menu-box");
 
     menuBtn.addEventListener("click", () => {
       menuOverlay.style.display = "flex";
+      menuBox.classList.add("slide-in");
     });
 
     menuClose.addEventListener("click", () => {
-      menuOverlay.style.display = "none";
+      menuBox.classList.remove("slide-in");
+      setTimeout(() => menuOverlay.style.display = "none", 200);
     });
 
     menuOverlay.addEventListener("click", (e) => {
       if (e.target === menuOverlay) {
-        menuOverlay.style.display = "none";
+        menuBox.classList.remove("slide-in");
+        setTimeout(() => menuOverlay.style.display = "none", 200);
       }
     });
   </script>
