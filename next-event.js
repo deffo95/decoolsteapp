@@ -22,10 +22,18 @@ async function loadNextEvent() {
     const upcoming = events.filter(ev => ev.start >= now);
 
     const birthdayEvents = birthdays.map(b => {
-      const year = now.getFullYear();
+      let year = now.getFullYear();
+      let date = new Date(year, b.month - 1, b.day, 0, 0);
+
+      // als verjaardag dit jaar al geweest is → volgend jaar
+      if (date < now) {
+        year = year + 1;
+        date = new Date(year, b.month - 1, b.day, 0, 0);
+      }
+
       return {
         summary: `Verjaardag van ${b.name}`,
-        start: new Date(year, b.month - 1, b.day, 0, 0),
+        start: date,
         location: "🎉"
       };
     });
