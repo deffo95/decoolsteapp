@@ -17,14 +17,12 @@
   <div class="board-wrapper">
     <div class="board">
 
-      <!-- Header zonder icoontjes en zonder tekst -->
       <div class="header-row">
         <div class="mascot">
           <img src="./maskotte.png" alt="Maskotte">
         </div>
       </div>
 
-      <!-- Agenda kaart -->
       <section class="agenda-card">
         <div class="agenda-card-title">Komende activiteit</div>
 
@@ -45,7 +43,6 @@
         </a>
       </section>
 
-      <!-- Kaarten -->
       <section class="stacks">
         <a href="./games.html" class="stack-card stack-games">
           <div class="stack-card-title">Games</div>
@@ -62,21 +59,42 @@
   </div>
 
   <nav class="bottom-nav">
-    <div class="nav-cap active">
-      <span>🏠</span>
-      <div class="nav-label">Home</div>
-    </div>
-    <a href="./agenda.html" class="nav-cap">
-      <span>📅</span>
-      <div class="nav-label">Agenda</div>
-    </a>
-    <div class="nav-cap">
-      <span>☰</span>
-      <div class="nav-label">Menu</div>
-    </div>
+    <a href="./index.html" class="nav-cap" id="nav-home">🏠</a>
+    <a href="./agenda.html" class="nav-cap" id="nav-agenda">📅</a>
+    <div class="nav-cap" id="nav-menu">☰</div>
   </nav>
 
+  <div id="menu-overlay" class="menu-overlay">
+    <div class="menu-box">
+      <h3>Menu</h3>
+      <a href="./index.html">🏠 Home</a>
+      <a href="./games.html">🎲 Games</a>
+      <a href="./agenda.html">📅 Agenda</a>
+      <button id="menu-close">Sluiten</button>
+    </div>
+  </div>
+
   <script src="./next-event.js"></script>
+
+  <script>
+    const menuBtn = document.getElementById("nav-menu");
+    const menuOverlay = document.getElementById("menu-overlay");
+    const menuClose = document.getElementById("menu-close");
+
+    menuBtn.addEventListener("click", () => {
+      menuOverlay.style.display = "flex";
+    });
+
+    menuClose.addEventListener("click", () => {
+      menuOverlay.style.display = "none";
+    });
+
+    menuOverlay.addEventListener("click", (e) => {
+      if (e.target === menuOverlay) {
+        menuOverlay.style.display = "none";
+      }
+    });
+  </script>
 
   <script>
     if ("serviceWorker" in navigator) {
