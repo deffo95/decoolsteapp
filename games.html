@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <title>Games – De Coolste App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="manifest" href="./manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="De Coolste App">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+
+  <div class="board-wrapper">
+    <div class="board">
+
+      <div class="header-row">
+        <div class="mascot">
+          <img src="./maskotte.png" alt="Maskotte">
+        </div>
+        <h1 class="app-title">De Coolste App</h1>
+      </div>
+
+      <h1 style="margin-bottom: 16px;">🎮 Games</h1>
+
+      <section class="stacks">
+        <a href="./exploding-aces.html" class="stack-card stack-games">
+          <div class="stack-card-title">Exploding Aces</div>
+          <div class="stack-card-icon">🃏</div>
+        </a>
+
+        <a href="#" class="stack-card stack-games">
+          <div class="stack-card-title">Meer games binnenkort</div>
+          <div class="stack-card-icon">✨</div>
+        </a>
+      </section>
+
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="./index.html" class="nav-cap">🏠</a>
+    <a href="./agenda.html" class="nav-cap">📅</a>
+    <div class="nav-cap" id="nav-menu">☰</div>
+  </nav>
+
+  <div id="menu-overlay" class="menu-overlay">
+    <div class="menu-box slide-in">
+      <h3>Menu</h3>
+      <a href="./index.html">🏠 Home</a>
+      <a href="./games.html">🎮 Games</a>
+      <a href="./agenda.html">📅 Agenda</a>
+      <button id="menu-close">Sluiten</button>
+    </div>
+  </div>
+
+  <script>
+    const menuBtn = document.getElementById("nav-menu");
+    const menuOverlay = document.getElementById("menu-overlay");
+    const menuClose = document.getElementById("menu-close");
+    const menuBox = document.querySelector(".menu-box");
+
+    menuBtn.addEventListener("click", () => {
+      menuOverlay.style.display = "flex";
+      menuBox.classList.add("slide-in");
+    });
+
+    menuClose.addEventListener("click", () => {
+      menuBox.classList.remove("slide-in");
+      setTimeout(() => menuOverlay.style.display = "none", 200);
+    });
+
+    menuOverlay.addEventListener("click", (e) => {
+      if (e.target === menuOverlay) {
+        menuBox.classList.remove("slide-in");
+        setTimeout(() => menuOverlay.style.display = "none", 200);
+      }
+    });
+  </script>
+
+</body>
+</html>
