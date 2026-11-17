@@ -10,31 +10,12 @@
   <meta name="apple-mobile-web-app-title" content="De Coolste App">
   <link rel="apple-touch-icon" href="./icon-192.png">
 
+  <meta name="theme-color" content="#0b0c12">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap">
   <link rel="stylesheet" href="./style.css">
 
-  <style>
-    .rule-section {
-      background: #1f2026;
-      padding: 20px;
-      border-radius: 16px;
-      border: 2px solid #2a2b33;
-      margin-bottom: 16px;
-    }
-    .rule-section h2 {
-      margin-top: 0;
-      font-size: 22px;
-    }
-    details {
-      background: #2a2b33;
-      padding: 14px;
-      border-radius: 12px;
-      margin-bottom: 12px;
-    }
-    summary {
-      font-size: 18px;
-      cursor: pointer;
-    }
-  </style>
 </head>
 
 <body>
@@ -49,7 +30,7 @@
         <h1 class="app-title">De Coolste App</h1>
       </div>
 
-      <h1 style="margin-bottom: 16px;">🃏 Exploding Aces</h1>
+      <h1 class="page-title">🃏 Exploding Aces</h1>
 
       <div class="rule-section">
         <h2>Spelregels</h2>
@@ -131,13 +112,13 @@
   </div>
 
   <nav class="bottom-nav">
-    <a href="./index.html" class="nav-cap">🏠</a>
-    <a href="./agenda.html" class="nav-cap">📅</a>
-    <div class="nav-cap" id="nav-menu">☰</div>
+    <a href="./index.html" class="nav-cap" data-label="Home">🏠</a>
+    <a href="./agenda.html" class="nav-cap" data-label="Agenda">📅</a>
+    <div class="nav-cap" id="nav-menu" data-label="Menu" role="button" tabindex="0">☰</div>
   </nav>
 
   <div id="menu-overlay" class="menu-overlay">
-    <div class="menu-box slide-in">
+    <div class="menu-box">
       <h3>Menu</h3>
       <a href="./index.html">🏠 Home</a>
       <a href="./games.html">🎮 Games</a>
@@ -154,7 +135,7 @@
 
     menuBtn.addEventListener("click", () => {
       menuOverlay.style.display = "flex";
-      menuBox.classList.add("slide-in");
+      requestAnimationFrame(() => requestAnimationFrame(() => menuBox.classList.add("slide-in")));
     });
 
     menuClose.addEventListener("click", () => {

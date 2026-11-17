@@ -1,173 +1,511 @@
-/* Algemene layout */
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #14151a;
-  color: white;
+/* ========== Basis ========== */
+:root {
+  --bg: #0b0c12;
+  --surface: rgba(255, 255, 255, 0.05);
+  --surface-strong: rgba(255, 255, 255, 0.08);
+  --border: rgba(255, 255, 255, 0.09);
+  --text: #f4f4f8;
+  --muted: #9a9cb0;
+  --accent: #8b5cf6;
+  --accent-2: #ec4899;
+  --accent-3: #f59e0b;
+  --gradient: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 60%, var(--accent-3) 120%);
+  --radius: 22px;
+  --nav-height: 72px;
+  color-scheme: dark;
 }
 
-/* Bordspel wrapper */
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Zachte kleurvlekken op de achtergrond */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(40rem 30rem at 110% -10%, rgba(139, 92, 246, 0.28), transparent 60%),
+    radial-gradient(30rem 25rem at -20% 30%, rgba(236, 72, 153, 0.16), transparent 60%),
+    radial-gradient(30rem 25rem at 50% 120%, rgba(14, 165, 233, 0.14), transparent 60%);
+}
+
+h1, h2, h3 { letter-spacing: -0.02em; }
+
+a { color: inherit; }
+
+/* ========== Layout ========== */
 .board-wrapper {
   display: flex;
   justify-content: center;
-  padding: 20px;
+  padding: max(16px, env(safe-area-inset-top)) 16px calc(var(--nav-height) + 40px + env(safe-area-inset-bottom));
 }
 
 .board {
   width: 100%;
   max-width: 480px;
+  animation: fade-up 0.4s ease-out both;
 }
 
-/* Header met logo + titel */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ========== Header ========== */
 .header-row {
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  gap: 12px;
+  margin: 8px 0 24px;
+}
+
+.mascot {
+  flex: none;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: var(--surface-strong);
+  border: 1px solid var(--border);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
 }
 
 .mascot img {
-  width: 80px;
+  width: 46px;
   height: auto;
 }
 
 .app-title {
-  font-size: 26px;
-  margin-left: 12px;
-  font-weight: bold;
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  background: linear-gradient(90deg, #fff 30%, #c4b5fd);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
-/* Agenda kaart */
+.page-title {
+  margin: 0 0 18px;
+  font-size: 30px;
+  font-weight: 800;
+}
+
+.section-label {
+  margin: 28px 0 12px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+/* ========== Kaarten ========== */
+.agenda-card,
+.stack-card,
+.rule-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
 .agenda-card {
-  background: #1f2026;
-  padding: 20px;
-  border-radius: 16px;
-  margin-bottom: 20px;
-  border: 2px solid #2a2b33;
+  padding: 18px;
+  margin-bottom: 12px;
 }
 
 .agenda-card-title {
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 12px;
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 8px;
 }
 
 .agenda-line {
   display: flex;
   align-items: center;
-  margin: 6px 0;
+  gap: 8px;
+  margin: 4px 0;
+  color: var(--muted);
+  font-size: 15px;
 }
 
 .agenda-line .icon {
-  margin-right: 8px;
+  width: 20px;
+  text-align: center;
+  font-size: 14px;
 }
 
-button {
-  margin-top: 16px;
-  width: 100%;
-  padding: 12px;
+/* Uitgelichte kaart op home: eerstvolgende activiteit */
+.hero-card {
+  position: relative;
+  overflow: hidden;
+  padding: 22px;
   border: none;
-  border-radius: 10px;
-  background: #3a3b45;
-  color: white;
-  font-size: 16px;
+  background: var(--gradient);
+  box-shadow: 0 20px 40px -18px rgba(139, 92, 246, 0.7);
 }
 
-/* Stacks (Games / Agenda) */
+.hero-card::after {
+  content: "";
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  right: -70px;
+  top: -90px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+  pointer-events: none;
+}
+
+.hero-card .agenda-card-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.85;
+  margin: 0;
+}
+
+.hero-card h2 {
+  margin: 10px 0 14px;
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.hero-card .agenda-line { color: rgba(255, 255, 255, 0.92); }
+
+.countdown {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.2);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.countdown:empty { display: none; }
+
+/* ========== Knoppen ========== */
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+.hero-card a { text-decoration: none; }
+
+.hero-card button {
+  margin-top: 18px;
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.95);
+  color: #2e1065;
+  font-size: 16px;
+  font-weight: 700;
+  transition: transform 0.15s ease;
+}
+
+button:active,
+.stack-card:active { transform: scale(0.97); }
+
+/* ========== Agenda-lijst ========== */
+.agenda-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.date-tile {
+  flex: none;
+  width: 56px;
+  height: 60px;
+  border-radius: 16px;
+  background: var(--surface-strong);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.date-tile .day {
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.date-tile .month {
+  margin-top: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--accent-2);
+}
+
+.agenda-item.is-birthday .date-tile {
+  background: var(--gradient);
+  border: none;
+}
+
+.agenda-item.is-birthday .date-tile .month { color: rgba(255, 255, 255, 0.9); }
+
+.agenda-item-body { min-width: 0; }
+
+.agenda-item .agenda-card-title {
+  margin-bottom: 4px;
+  overflow-wrap: anywhere;
+}
+
+.agenda-month {
+  margin: 22px 4px 10px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.agenda-month:first-child { margin-top: 0; }
+
+/* ========== Tegels (Games / Agenda) ========== */
 .stacks {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
 }
 
 .stack-card {
-  background: #1f2026;
-  padding: 20px;
-  border-radius: 16px;
-  border: 2px solid #2a2b33;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 14px;
+  padding: 16px;
   text-decoration: none;
-  color: white;
+  color: var(--text);
+  transition: transform 0.15s ease, background 0.15s ease;
 }
 
-.stack-card-title {
-  font-size: 20px;
-}
+.stack-card:hover { background: var(--surface-strong); }
 
 .stack-card-icon {
-  font-size: 28px;
+  order: -1;
+  flex: none;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+  background: rgba(139, 92, 246, 0.18);
 }
 
-/* Onderste navigatie */
+.stack-agenda .stack-card-icon { background: rgba(14, 165, 233, 0.18); }
+.stack-soon .stack-card-icon   { background: rgba(245, 158, 11, 0.16); }
+.stack-soon { opacity: 0.6; pointer-events: none; }
+
+.stack-card-title {
+  flex: 1;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.stack-card::after {
+  content: "›";
+  font-size: 26px;
+  line-height: 1;
+  color: var(--muted);
+}
+
+.stack-soon::after { content: none; }
+
+/* ========== Onderste navigatie ========== */
 .bottom-nav {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: #1f2026;
-  border-top: 2px solid #2a2b33;
+  left: 50%;
+  bottom: calc(14px + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  width: min(calc(100% - 32px), 360px);
+  height: var(--nav-height);
   display: flex;
   justify-content: space-around;
-  padding: 12px 0;
+  align-items: center;
+  padding: 0 8px;
+  border-radius: 24px;
+  background: rgba(22, 23, 32, 0.75);
+  border: 1px solid var(--border);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  backdrop-filter: blur(20px) saturate(160%);
+  box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.7);
+  z-index: 100;
 }
 
 .nav-cap {
-  font-size: 26px;
-  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  min-width: 72px;
+  padding: 8px 12px;
+  border-radius: 16px;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--muted);
   text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s ease;
 }
 
-/* Menu overlay */
+.nav-cap::after {
+  content: attr(data-label);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.nav-cap[aria-current="page"] {
+  background: rgba(139, 92, 246, 0.22);
+  color: var(--text);
+}
+
+/* ========== Menu ========== */
 .menu-overlay {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  top: 0;
-  background: rgba(0,0,0,0.6);
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
   display: none;
   justify-content: center;
   align-items: flex-end;
   z-index: 999;
 }
 
-/* Slide-in menu box */
 .menu-box {
-  background: #ffffff;
   width: 100%;
-  padding: 24px;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-  box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
-  text-align: center;
-
-  /* Startpositie: onder beeld */
+  max-width: 480px;
+  padding: 12px 20px calc(24px + env(safe-area-inset-bottom));
+  background: #171823;
+  border: 1px solid var(--border);
+  border-bottom: none;
+  border-radius: 28px 28px 0 0;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
   transform: translateY(100%);
-  transition: transform 0.25s ease-out;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-/* Actieve animatie */
-.menu-box.slide-in {
-  transform: translateY(0);
+.menu-box::before {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 5px;
+  margin: 0 auto 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.2);
 }
 
-/* Menu links */
+.menu-box.slide-in { transform: translateY(0); }
+
+.menu-box h3 {
+  margin: 0 0 12px 4px;
+  font-size: 20px;
+}
+
 .menu-box a {
   display: block;
-  padding: 12px;
-  font-size: 20px;
+  padding: 14px 16px;
+  margin-bottom: 6px;
+  border-radius: 14px;
+  font-size: 17px;
+  font-weight: 600;
   text-decoration: none;
-  color: #333;
+  color: var(--text);
+  background: var(--surface);
 }
 
-/* Sluitknop */
+.menu-box a:active { background: var(--surface-strong); }
+
 #menu-close {
-  margin-top: 20px;
-  padding: 10px 20px;
-  font-size: 18px;
+  width: 100%;
+  margin-top: 12px;
+  padding: 14px;
   border: none;
-  background: #333;
-  color: white;
-  border-radius: 8px;
+  border-radius: 14px;
+  background: var(--surface-strong);
+  color: var(--muted);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* ========== Spelregels (Exploding Aces) ========== */
+.rule-section {
+  padding: 18px;
+  margin-bottom: 16px;
+}
+
+.rule-section h2 {
+  margin: 0 0 14px;
+  font-size: 20px;
+}
+
+details {
+  margin-bottom: 8px;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+details[open] { background: var(--surface-strong); }
+
+summary {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+summary::-webkit-details-marker { display: none; }
+
+summary::after {
+  content: "+";
+  font-size: 20px;
+  color: var(--muted);
+  transition: transform 0.2s ease;
+}
+
+details[open] summary::after { transform: rotate(45deg); }
+
+details p {
+  margin: 0 16px 12px;
+  color: #c9cad6;
+  line-height: 1.55;
+  font-size: 15px;
+}
+
+details p:last-child { margin-bottom: 16px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
 }
