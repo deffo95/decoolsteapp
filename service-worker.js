@@ -1,4 +1,4 @@
-const CACHE_NAME = "coolsteapp-v3";
+const CACHE_NAME = "coolsteapp-v4";
 const ASSETS = [
   "./",
   "./index.html",
@@ -9,6 +9,7 @@ const ASSETS = [
   "./calendar.js",
   "./next-event.js",
   "./agenda-script.js",
+  "./notifications.js",
   "./manifest.json",
   "./icon-192.png",
   "./icon-512.png",
@@ -50,5 +51,35 @@ self.addEventListener("fetch", event => {
         return res;
       })
       .catch(() => caches.match(req, { ignoreSearch: true }))
+  );
+});
+
+// Pushmelding tonen (verstuurd door de push-worker)
+self.addEventListener("push", event => {
+  let data = {};
+  try { data = event.data ? event.data.json() : {}; } catch { data = { body: event.data && event.data.text() }; }
+
+  event.waitUntil(
+    self.registration.showNotification(data.title || "De Coolste App", {
+      body: data.body || "",
+      icon: "./icon-192.png",
+      badge: "./icon-192.png",
+      tag: "agenda-vandaag",
+      data: { url: data.url || "./agenda.html" }
+    })
+  );
+});
+
+// Tik op de melding: open (of focus) de agenda
+self.addEventListener("notificationclick", event => {
+  event.notification.close();
+  const url = new URL(event.notification.data?.url || "./agenda.html", self.registration.scope).href;
+
+  event.waitUntil(
+    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then(windows => {
+      const open = windows.find(w => w.url.startsWith(self.registration.scope));
+      if (open) return open.navigate(url).then(w => (w || open).focus());
+      return self.clients.openWindow(url);
+    })
   );
 });

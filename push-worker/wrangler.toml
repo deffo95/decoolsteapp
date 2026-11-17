@@ -1,0 +1,26 @@
+name = "coolsteapp-push"
+main = "src/index.js"
+compatibility_date = "2026-11-01"
+
+# Elke 5 minuten kijken wie er een melding moet krijgen
+[triggers]
+crons = ["*/5 * * * *"]
+
+# Opslag van de aanmeldingen. Maak aan met:
+#   npx wrangler kv namespace create SUBSCRIPTIONS
+# en zet de id die je terugkrijgt hieronder.
+[[kv_namespaces]]
+binding = "SUBSCRIPTIONS"
+id = "VUL_HIER_DE_KV_ID_IN"
+
+[vars]
+# Dezelfde agenda-proxy als in calendar.js
+CALENDAR_URL = "https://winter-rice-f921.kthnmj5r86.workers.dev"
+# Uitvoer van: node generate-vapid-keys.mjs
+VAPID_PUBLIC_KEY = "VUL_HIER_DE_PUBLIEKE_SLEUTEL_IN"
+# Contactadres voor de pushdiensten (een https-adres of mailto:)
+VAPID_SUBJECT = "https://github.com/deffo95/decoolsteapp"
+# Optioneel: alleen de app toestaan, bijv. "https://deffo95.github.io"
+ALLOWED_ORIGIN = "*"
+
+# Geheim (niet in dit bestand!): npx wrangler secret put VAPID_PRIVATE_JWK

@@ -6,6 +6,7 @@ const PROXY_URL = "https://winter-rice-f921.kthnmj5r86.workers.dev";
 const AGENDA_CACHE_KEY = "agenda-cache-v1";
 const FETCH_TIMEOUT_MS = 10000;
 
+// Houd deze lijst gelijk aan die in push-worker/src/index.js
 const birthdays = [
   { name: "Bart", month: 3, day: 13 },
   { name: "Davey", month: 1, day: 8 },

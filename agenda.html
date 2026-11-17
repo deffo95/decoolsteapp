@@ -29,6 +29,25 @@
       </div>
 
       <h1 class="page-title">📅 Agenda</h1>
+      <section class="agenda-card notify-card" id="notify-card" hidden>
+        <div class="notify-head">
+          <div>
+            <div class="agenda-card-title">🔔 Meldingen</div>
+            <div class="notify-status" id="notify-status">Krijg een melding op de dag van een activiteit.</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="notify-toggle" aria-label="Meldingen aan of uit">
+            <span class="switch-track"></span>
+          </label>
+        </div>
+        <div class="notify-time-row" id="notify-time-row" hidden>
+          <label for="notify-time">Tijdstip</label>
+          <input type="time" id="notify-time" value="09:00">
+          <button type="button" id="notify-test" class="ghost-button">Test</button>
+        </div>
+        <p class="notify-hint" id="notify-hint" hidden></p>
+      </section>
+
       <div id="agenda-list">Agenda wordt geladen...</div>
 
     </div>
@@ -52,6 +71,7 @@
 
   <script src="./calendar.js"></script>
   <script src="./agenda-script.js"></script>
+  <script src="./notifications.js"></script>
 
   <script>
     const menuBtn = document.getElementById("nav-menu");
