@@ -10,6 +10,10 @@
   <meta name="apple-mobile-web-app-title" content="De Coolste App">
   <link rel="apple-touch-icon" href="./icon-192.png">
 
+  <meta name="theme-color" content="#0b0c12">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap">
   <link rel="stylesheet" href="./style.css">
 </head>
 
@@ -26,7 +30,7 @@
       </div>
 
       <!-- Agenda kaart -->
-      <section class="agenda-card">
+      <section class="agenda-card hero-card">
         <div class="agenda-card-title">Komende activiteit</div>
 
         <h2 id="next-title">Laden...</h2>
@@ -41,12 +45,15 @@
           <span id="next-location">Even geduld...</span>
         </div>
 
+        <span class="countdown" id="next-countdown"></span>
+
         <a href="./agenda.html">
           <button>Bekijk agenda</button>
         </a>
       </section>
 
       <!-- Kaarten -->
+      <div class="section-label">Snel naar</div>
       <section class="stacks">
         <a href="./games.html" class="stack-card stack-games">
           <div class="stack-card-title">Games</div>
@@ -64,14 +71,14 @@
 
   <!-- Onderste navigatie -->
   <nav class="bottom-nav">
-    <a href="./index.html" class="nav-cap">🏠</a>
-    <a href="./agenda.html" class="nav-cap">📅</a>
-    <div class="nav-cap" id="nav-menu">☰</div>
+    <a href="./index.html" class="nav-cap" data-label="Home" aria-current="page">🏠</a>
+    <a href="./agenda.html" class="nav-cap" data-label="Agenda">📅</a>
+    <div class="nav-cap" id="nav-menu" data-label="Menu" role="button" tabindex="0">☰</div>
   </nav>
 
   <!-- Slide-in menu -->
   <div id="menu-overlay" class="menu-overlay">
-    <div class="menu-box slide-in">
+    <div class="menu-box">
       <h3>Menu</h3>
       <a href="./index.html">🏠 Home</a>
       <a href="./games.html">🎲 Games</a>
@@ -92,7 +99,7 @@
 
     menuBtn.addEventListener("click", () => {
       menuOverlay.style.display = "flex";
-      menuBox.classList.add("slide-in");
+      requestAnimationFrame(() => requestAnimationFrame(() => menuBox.classList.add("slide-in")));
     });
 
     menuClose.addEventListener("click", () => {

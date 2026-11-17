@@ -3,8 +3,8 @@
   "short_name": "Coolste App",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#14151a",
-  "theme_color": "#14151a",
+  "background_color": "#0b0c12",
+  "theme_color": "#0b0c12",
   "icons": [
     {
       "src": "./icon-192.png",

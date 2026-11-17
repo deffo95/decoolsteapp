@@ -10,6 +10,10 @@
   <meta name="apple-mobile-web-app-title" content="De Coolste App">
   <link rel="apple-touch-icon" href="./icon-192.png">
 
+  <meta name="theme-color" content="#0b0c12">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap">
   <link rel="stylesheet" href="./style.css">
 </head>
 
@@ -25,7 +29,7 @@
         <h1 class="app-title">De Coolste App</h1>
       </div>
 
-      <h1 style="margin-bottom: 16px;">🎮 Games</h1>
+      <h1 class="page-title">🎮 Games</h1>
 
       <section class="stacks">
         <a href="./exploding-aces.html" class="stack-card stack-games">
@@ -33,7 +37,7 @@
           <div class="stack-card-icon">🃏</div>
         </a>
 
-        <a href="#" class="stack-card stack-games">
+        <a href="#" class="stack-card stack-soon" aria-disabled="true">
           <div class="stack-card-title">Meer games binnenkort</div>
           <div class="stack-card-icon">✨</div>
         </a>
@@ -43,13 +47,13 @@
   </div>
 
   <nav class="bottom-nav">
-    <a href="./index.html" class="nav-cap">🏠</a>
-    <a href="./agenda.html" class="nav-cap">📅</a>
-    <div class="nav-cap" id="nav-menu">☰</div>
+    <a href="./index.html" class="nav-cap" data-label="Home">🏠</a>
+    <a href="./agenda.html" class="nav-cap" data-label="Agenda">📅</a>
+    <div class="nav-cap" id="nav-menu" data-label="Menu" role="button" tabindex="0">☰</div>
   </nav>
 
   <div id="menu-overlay" class="menu-overlay">
-    <div class="menu-box slide-in">
+    <div class="menu-box">
       <h3>Menu</h3>
       <a href="./index.html">🏠 Home</a>
       <a href="./games.html">🎮 Games</a>
@@ -66,7 +70,7 @@
 
     menuBtn.addEventListener("click", () => {
       menuOverlay.style.display = "flex";
-      menuBox.classList.add("slide-in");
+      requestAnimationFrame(() => requestAnimationFrame(() => menuBox.classList.add("slide-in")));
     });
 
     menuClose.addEventListener("click", () => {
