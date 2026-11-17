@@ -1,4 +1,4 @@
-const CACHE_NAME = "coolsteapp-v4";
+const CACHE_NAME = "coolsteapp-v5";
 const ASSETS = [
   "./",
   "./index.html",

@@ -3,7 +3,7 @@
 
 // Adres van de gedeployde push-worker, bijv. "https://coolsteapp-push.<jouw-naam>.workers.dev".
 // Zolang dit leeg is, wordt het meldingen-blok niet getoond.
-const PUSH_SERVER_URL = "";
+const PUSH_SERVER_URL = "https://coolsteapp-push.kthnmj5r86.workers.dev";
 
 const NOTIFY_TIME_KEY = "notify-time";
 const DEFAULT_NOTIFY_TIME = "09:00";
