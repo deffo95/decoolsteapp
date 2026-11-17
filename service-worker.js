@@ -1,10 +1,12 @@
-const CACHE_NAME = "coolsteapp-v5";
+const CACHE_NAME = "coolsteapp-v6";
 const ASSETS = [
   "./",
   "./index.html",
   "./agenda.html",
   "./games.html",
   "./exploding-aces.html",
+  "./dice.html",
+  "./dice.js",
   "./style.css",
   "./calendar.js",
   "./next-event.js",
