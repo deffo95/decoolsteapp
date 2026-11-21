@@ -1,4 +1,4 @@
-const CACHE_NAME = "coolsteapp-v6";
+const CACHE_NAME = "coolsteapp-v7";
 const ASSETS = [
   "./",
   "./index.html",
@@ -7,6 +7,9 @@ const ASSETS = [
   "./exploding-aces.html",
   "./dice.html",
   "./dice.js",
+  "./hitster.html",
+  "./hitster.js",
+  "./hitster-songs.json",
   "./style.css",
   "./calendar.js",
   "./next-event.js",

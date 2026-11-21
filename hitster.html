@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <title>Hitster – De Coolste App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="manifest" href="./manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="De Coolste App">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+
+  <meta name="theme-color" content="#0b0c12">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap">
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+
+  <div class="board-wrapper">
+    <div class="board">
+
+      <div class="header-row">
+        <div class="mascot">
+          <img src="./maskotte.png" alt="Maskotte">
+        </div>
+        <h1 class="app-title">De Coolste App</h1>
+      </div>
+
+      <h1 class="page-title">🎵 Hitster</h1>
+
+      <section class="agenda-card" id="hitster-setup" hidden>
+        <div class="agenda-card-title">Nog even instellen</div>
+        <p class="hitster-text">De koppeling met Spotify is nog niet ingesteld. Zie <code>hitster-README.md</code> in de repo.</p>
+      </section>
+
+      <section class="agenda-card hitster-connect" id="hitster-connect" hidden>
+        <div class="hitster-connect-icon">🎧</div>
+        <div class="agenda-card-title">Verbind met Spotify</div>
+        <p class="hitster-text">De muziek speelt af via de Spotify-app op deze telefoon (Spotify Premium nodig). Je hoeft maar één keer in te loggen.</p>
+        <button type="button" class="roll-button spotify-button" id="connect-button">Inloggen met Spotify</button>
+      </section>
+
+      <section class="hitster-game" id="hitster-game" hidden>
+        <div class="hitster-progress" id="hitster-progress"></div>
+
+        <div class="hitster-stage">
+          <div class="record" id="record" aria-hidden="true">
+            <div class="record-label" id="record-label">?</div>
+          </div>
+
+          <div class="song-card" id="song-card" hidden aria-live="polite">
+            <div class="song-card-artist" id="card-artist"></div>
+            <div class="song-card-year" id="card-year"></div>
+            <div class="song-card-title" id="card-title"></div>
+          </div>
+        </div>
+
+        <div class="hitster-status" id="hitster-status" hidden role="status">
+          <p id="hitster-status-text"></p>
+          <div class="hitster-status-actions">
+            <a class="ghost-button" id="open-spotify" href="spotify:" hidden>Open Spotify</a>
+            <button type="button" class="ghost-button" id="retry-button" hidden>Opnieuw proberen</button>
+          </div>
+        </div>
+
+        <button type="button" class="roll-button" id="main-button">▶️ Start</button>
+
+        <div class="hitster-controls">
+          <button type="button" class="ghost-button" id="pause-button" hidden>⏸ Pauze</button>
+          <button type="button" class="ghost-button" id="replay-button" hidden>🔁 Vanaf begin</button>
+        </div>
+
+        <div class="hitster-footer">
+          <button type="button" class="link-button" id="reshuffle-button">Opnieuw beginnen</button>
+          <button type="button" class="link-button" id="logout-button">Uitloggen bij Spotify</button>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="./index.html" class="nav-cap" data-label="Home">🏠</a>
+    <a href="./agenda.html" class="nav-cap" data-label="Agenda">📅</a>
+    <div class="nav-cap" id="nav-menu" data-label="Menu" role="button" tabindex="0">☰</div>
+  </nav>
+
+  <div id="menu-overlay" class="menu-overlay">
+    <div class="menu-box">
+      <h3>Menu</h3>
+      <a href="./index.html">🏠 Home</a>
+      <a href="./games.html">🎮 Games</a>
+      <a href="./agenda.html">📅 Agenda</a>
+      <button id="menu-close">Sluiten</button>
+    </div>
+  </div>
+
+  <script>
+    const menuBtn = document.getElementById("nav-menu");
+    const menuOverlay = document.getElementById("menu-overlay");
+    const menuClose = document.getElementById("menu-close");
+    const menuBox = document.querySelector(".menu-box");
+
+    menuBtn.addEventListener("click", () => {
+      menuOverlay.style.display = "flex";
+      requestAnimationFrame(() => requestAnimationFrame(() => menuBox.classList.add("slide-in")));
+    });
+
+    menuClose.addEventListener("click", () => {
+      menuBox.classList.remove("slide-in");
+      setTimeout(() => menuOverlay.style.display = "none", 200);
+    });
+
+    menuOverlay.addEventListener("click", (e) => {
+      if (e.target === menuOverlay) {
+        menuBox.classList.remove("slide-in");
+        setTimeout(() => menuOverlay.style.display = "none", 200);
+      }
+    });
+  </script>
+
+  <script src="./hitster.js"></script>
+</body>
+</html>
