@@ -12,7 +12,7 @@ regelt (Spotify Premium nodig). Daarvoor is eenmalig een gratis "developer app" 
    - **App name:** De Coolste App
    - **App description:** Hitster-spel voor vrienden
    - **Redirect URI:** het volledige adres van de Hitster-pagina in je app, bijvoorbeeld
-     `https://<jouw-website>/hitster.html`. Klik op **Add**. Het adres moet precies kloppen
+     `https://app.decoolstejongens.nl/hitster.html`. Klik op **Add**. Het adres moet precies kloppen
      (https, zelfde schrijfwijze, eindigend op `hitster.html`).
    - **Which API/SDKs are you planning to use?** Vink **Web API** aan.
 4. Vink de voorwaarden aan en klik **Save**.

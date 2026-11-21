@@ -2,9 +2,11 @@
 // Werkt via de Spotify Web API: de app stuurt de Spotify-app op je telefoon aan (Spotify Premium nodig).
 
 // Client ID van de Spotify developer app (geen geheim; zie de uitleg in hitster-README.md)
-const SPOTIFY_CLIENT_ID = "";
+const SPOTIFY_CLIENT_ID = "060c55a989f640d8a0c219a41d4a3724";
 const SCOPES = "user-modify-playback-state user-read-playback-state";
-const REDIRECT_URI = location.origin + location.pathname;
+// Moet exact overeenkomen met de Redirect URI in het Spotify-dashboard
+// (https://app.decoolstejongens.nl/hitster.html)
+const REDIRECT_URI = new URL("./hitster.html", location.href).href;
 
 const TOKEN_KEY = "hitster-spotify-token";
 const VERIFIER_KEY = "hitster-pkce-verifier";
