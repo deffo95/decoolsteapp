@@ -1056,3 +1056,10 @@ a.ghost-button { text-decoration: none; display: inline-block; }
   text-decoration: underline;
   text-underline-offset: 3px;
 }
+
+/* Externe link in het menu */
+.menu-external {
+  float: right;
+  color: var(--muted);
+  font-weight: 400;
+}
